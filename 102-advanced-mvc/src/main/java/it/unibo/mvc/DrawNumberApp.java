@@ -1,6 +1,7 @@
 package it.unibo.mvc;
 
 import java.io.FileNotFoundException;
+import java.lang.module.ModuleDescriptor.Builder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,20 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
             view.start();
         }
         final Map<String, Integer> configMap = DrawNumberConfig.retrieveConfiguration(configFile);
-        this.model = new DrawNumberImpl(configMap.get("minimum"), configMap.get("maximum"), configMap.get("attempts"));
+        final Configuration.Builder configBuilder = new Configuration.Builder();
+        configBuilder.setAttempts(configMap.get("attempts"));
+        configBuilder.setMax(configMap.get("maximum"));
+        configBuilder.setMin(configMap.get("minimum"));
+        Configuration config = configBuilder.build();
+
+        if (!config.isConsistent()) {
+            config = new Configuration.Builder().build();
+            for (final DrawNumberView view: views) {
+                view.displayError("Incosistent Config");
+            }
+        }
+
+        this.model = new DrawNumberImpl(config.getMin(), config.getMax(), config.getAttempts());
     }
 
     @Override
