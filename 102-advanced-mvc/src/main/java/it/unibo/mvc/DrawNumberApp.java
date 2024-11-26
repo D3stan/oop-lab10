@@ -3,10 +3,12 @@ package it.unibo.mvc;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  */
 public final class DrawNumberApp implements DrawNumberViewObserver {
+    private static final String configFile = "config.yml";
     private static final int MIN = 0;
     private static final int MAX = 100;
     private static final int ATTEMPTS = 10;
@@ -27,7 +29,8 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
             view.setObserver(this);
             view.start();
         }
-        this.model = new DrawNumberImpl(MIN, MAX, ATTEMPTS);
+        final Map<String, Integer> configMap = DrawNumberConfig.retrieveConfiguration(configFile);
+        this.model = new DrawNumberImpl(configMap.get("minimum"), configMap.get("maximum"), configMap.get("attempts"));
     }
 
     @Override
