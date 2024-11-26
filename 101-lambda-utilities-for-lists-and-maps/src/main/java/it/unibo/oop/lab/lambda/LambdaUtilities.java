@@ -83,9 +83,9 @@ public final class LambdaUtilities {
     public static <R, T> Map<R, Set<T>> group(final List<T> list, final Function<T, R> op) {
         final Map<R, Set<T>> retMap = new HashMap<>();
         list.forEach(elem -> {
-            retMap.merge(op.apply(elem), new HashSet<>(), (elem1, elem2) -> {
-                elem1.addAll(elem2);
-                return elem1;
+            retMap.merge(op.apply(elem), new HashSet<>(List.of(elem)), (elem1, elem2) -> {
+                elem2.addAll(elem1);
+                return elem2;
             });
         });
         return retMap;
