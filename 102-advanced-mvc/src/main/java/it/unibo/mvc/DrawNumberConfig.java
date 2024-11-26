@@ -3,20 +3,36 @@ package it.unibo.mvc;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DrawNumberConfig {
+
+/**
+ * Utility class for retrieving config values from file.
+ */
+public final class DrawNumberConfig {
+
     /**
-     * Loads config file from resources folder
+     * private constructor.
+     */
+    private DrawNumberConfig() {
+        // do nothing
+    }
+
+    /**
+     * Loads config file from resources folder.
      * @param configFile file name
      * @return a Map of the configuration values
      */
-    static final Map <String, Integer> retrieveConfiguration(final String configFile) {
+    static Map<String, Integer> retrieveConfiguration(final String configFile) {
         final Map<String, Integer> configMap = new HashMap<>();
-        try (final BufferedReader r = new BufferedReader(new InputStreamReader(ClassLoader.getSystemResourceAsStream(configFile)))) {
+        try (
+            BufferedReader r = new BufferedReader(
+                new InputStreamReader(ClassLoader.getSystemResourceAsStream(configFile), StandardCharsets.UTF_8)
+            )) {
             String lineRead;
-            while ((lineRead = r.readLine()) != null) {
+            while ((lineRead = r.readLine()) != null) { // NOPMD needed for cleaner code
                 configMap.put(lineRead.split(":")[0], Integer.parseInt(lineRead.split(":")[1].trim()));
             }
         } catch (IOException e) {

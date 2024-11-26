@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  */
 public final class DrawNumberApp implements DrawNumberViewObserver {
-    private static final String configFile = "config.yml";
+    private static final String CONFIG_FILE = "config.yml";
 
     private final DrawNumber model;
     private final List<DrawNumberView> views;
@@ -26,7 +26,7 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
             view.setObserver(this);
             view.start();
         }
-        final Map<String, Integer> configMap = DrawNumberConfig.retrieveConfiguration(configFile);
+        final Map<String, Integer> configMap = DrawNumberConfig.retrieveConfiguration(CONFIG_FILE);
         final Configuration.Builder configBuilder = new Configuration.Builder();
         configBuilder.setAttempts(configMap.get("attempts"));
         configBuilder.setMax(configMap.get("maximum"));
@@ -79,7 +79,12 @@ public final class DrawNumberApp implements DrawNumberViewObserver {
      * @throws FileNotFoundException 
      */
     public static void main(final String... args) throws FileNotFoundException {
-        new DrawNumberApp(new DrawNumberViewImpl(), new DrawNumberViewImpl(), new PrintStreamView(System.out), new PrintStreamView("log.txt"));
+        new DrawNumberApp(
+            new DrawNumberViewImpl(),
+            new DrawNumberViewImpl(),
+            new PrintStreamView(System.out),
+            new PrintStreamView("log.txt")
+        );
     }
 
 }
